@@ -1,6 +1,6 @@
 import argparse
 import re
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from utils import get_input_escapable
 from wordle_helper.word_list import WordList, LetterFrequencies, find_first_guess
@@ -11,7 +11,29 @@ class WordleFilters:
         self.word_list_full = WordList().words
         self.is_verbose = is_verbose
 
-    def run_iter(self):
+    def run_iter(self, excluded_letters: str, positioned_letters: str, unpositioned_letters: Union[str, List[str]]):
+        """
+        Given the selected letters, run the filters and get the possible remaining words
+        :param excluded_letters: str, the list of letters that have already been used that don't match
+        :param positioned_letters: str, a RegEx that declares the position of known letters.
+            '.' is a placeholder for any unknown letter, eg "..RE."
+        :param unpositioned_letters: str or List of str, containing letters that are in the word but in the wrong position
+        :return: list of possible remaining words
+        """
+
+        if isinstance(unpositioned_letters, list):
+            # just take the first one, deal with the position history later
+            unpositioned_letters = unpositioned_letters[0]
+
+        initial_words = self.word_list_full.copy()
+        words_excludeltr = self.check_excluded_letters(initial_words, excluded_letters)
+        words_positionchr = self.check_positioned_letters(words_excludeltr, positioned_letters)
+        words_knownltrs = self.check_unpositioned_letters(words_positionchr, unpositioned_letters)
+        result = words_knownltrs  # end of the filter pipe
+
+        return result
+
+    def run_iter_cli(self):
         """
         Run a single iteration of a guess
         :return: list of possible words
@@ -158,7 +180,7 @@ if __name__ == "__main__":
     while loop_check:
         print(f"*** Wordle Helper [iter {iter_ctr}]***")
         iter_ctr += 1
-        result = wordle_filt.run_iter()
+        result = wordle_filt.run_iter_cli()
 
     if len(result) == 0:
         print("No known solutions, you messed up somewhere in your letter entering. Or bad dictionary.")
