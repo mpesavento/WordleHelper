@@ -26,10 +26,13 @@ class WordleFilters:
             unpositioned_letters = unpositioned_letters[0]
 
         initial_words = self.word_list_full.copy()
-        words_excludeltr = self.check_excluded_letters(initial_words, excluded_letters)
-        words_positionchr = self.check_positioned_letters(words_excludeltr, positioned_letters)
-        words_knownltrs = self.check_unpositioned_letters(words_positionchr, unpositioned_letters)
-        result = words_knownltrs  # end of the filter pipe
+        words_excludeltr = self.check_excluded_letters(initial_words, excluded_letters) \
+            if excluded_letters else initial_words
+        words_positionchr = self.check_positioned_letters(words_excludeltr, positioned_letters, remove_dup_letters=True) \
+            if positioned_letters else words_excludeltr
+        words_knownltrs = self.check_unpositioned_letters(words_positionchr, unpositioned_letters) \
+            if unpositioned_letters else words_positionchr
+        result = self.sort_by_letter_freq(words_knownltrs)  # end of the filter pipe
 
         return result
 
@@ -102,18 +105,20 @@ class WordleFilters:
         return word_matches
 
     @staticmethod
-    def check_positioned_letters(words: List[str], positioned_letters: str) -> List[str]:
+    def check_positioned_letters(words: List[str], positioned_letters: str, remove_dup_letters=True) -> List[str]:
         """
         Check the wordlist to see which words have a letter in the target position
 
         :param words: list of words
         :param positioned_letters: str, regex format using '.' to mark any unknown positions
             eg: "..G.Y"
+        :param remove_dup_letters: bool, remove any words with the given letters in there more than once
         :return: list with remaining words
         """
         positioned_matcher = re.compile(positioned_letters.lower())
         matches = [positioned_matcher.findall(w) for w in words]
         word_matches = [m[0] for m in matches if len(m) > 0]
+
         return word_matches
 
     @staticmethod
@@ -123,9 +128,11 @@ class WordleFilters:
         :param words: list of words
         :param unpositioned_letters: str, regex format using '.' to mark any unknown positions
             eg: "..G.Y"
-            NOTE: this will change once i add a unpositioned history
-        :return:  list with remaining words
+            NOTE: this will change once unpositioned history is added
+        :return: list with remaining words
         """
+        if not unpositioned_letters:
+            return words
         # This is a bit harder.
         # Write a regex to exclude the target letters in a given position, AND include them elsewhere
         # first find all words that do not have letters in the given positions

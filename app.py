@@ -22,44 +22,20 @@ def index():
     position_letters = escape(request.args.get("positioned"))
     unpositioned_letters = escape(request.args.get("unpositioned"))
 
-    if request.method == 'GET' and excluded_letters:
-
+    if request.method == 'GET':
         wordle_filters = WordleFilters()
         possible_words = wordle_filters.run_iter(excluded_letters, position_letters, unpositioned_letters)
-        # title = request.form['title']
-        # content = request.form['content']
-        #
-        # if not title:
-        #     flash('Title is required!')
-        # elif not content:
-        #     flash('Content is required!')
-        # else:
-        #     messages.append({'title': title, 'content': content})
-        #     return redirect(url_for('index'))
-    return render_template('index.html', possible_words=possible_words)
-    # return (
-    #     f"Welcome to Yet Another Wordle Helper API!<br/>")
+
+    return render_template('index.html',
+                           excluded_letters=excluded_letters,
+                           position_letters=position_letters,
+                           unpositioned_letters=unpositioned_letters,
+                           possible_words=possible_words)
 
 
 @app.route("/first_guess")
 def first_guess():
     return render_template('first_guess.html', first_guesses=first_guesses)
-
-
-# @app.route('/create/', methods=('GET', 'POST'))
-# def create():
-#     if request.method == 'POST':
-#         title = request.form['title']
-#         content = request.form['content']
-#
-#         if not title:
-#             flash('Title is required!')
-#         elif not content:
-#             flash('Content is required!')
-#         else:
-#             messages.append({'title': title, 'content': content})
-#             return redirect(url_for('index'))
-#     return render_template('create.html')
 
 
 @app.route("/about")
