@@ -10,6 +10,8 @@ click==8.0.3
     #   pip-tools
 flask==2.0.2
     # via -r requirements.in
+gunicorn==20.1.0
+    # via -r requirements.in
 itsdangerous==2.0.1
     # via flask
 jinja2==3.0.3
