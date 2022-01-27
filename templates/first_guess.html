@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>{% block title %} First guesses {% endblock %}</h1>
+    <div class="">
+        <p>Possible first word guesses, selected by unique vowel frequency:</p>
+    </div>
+    <div class="messages">
+        <ul>
+        {% for word in first_guesses %}
+            <li>{{ word }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

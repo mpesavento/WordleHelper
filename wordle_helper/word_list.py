@@ -57,13 +57,24 @@ class LetterFrequencies:
         return sum([self.letter_freq[ltr] for ltr in list(word)])
 
 
+def sort_by_letter_freq(words, common_first=True):
+    """
+    Sort the given list of words by the summed letter frequencies
+    :param words: List[str] word strings
+    :param common_first: sort by common first. If False, sort by rare first
+    :return: sorted word strings
+    """
+    ltr_freq = LetterFrequencies()
+    word_sum_freq = [(word, ltr_freq.sum_letter_freq(word)) for word in words]
+    words_out = sorted(word_sum_freq, key=lambda x: x[1], reverse=common_first)
+    return [w[0] for w in words_out]
+
+
 def find_first_guess() -> list:
     """
     What's a good first guess? Probably something with a lot of vowels!
 
-    Deprecated, not using WordList class
-
-    :return: list, words returned from the target filter
+    :return: list, words returned from the target filter, sorted by decreasing letter frequency sum
     """
     word_list = WordList()
 
@@ -75,6 +86,7 @@ def find_first_guess() -> list:
         if v["unique_vowel_ct"] > max_vowel:
             max_vowel = v["unique_vowel_ct"]
     best_starters = [w for w, v in word_dict.items() if v["unique_vowel_ct"] == max_vowel]
+    best_starters = sort_by_letter_freq(best_starters)
     return best_starters
 
 

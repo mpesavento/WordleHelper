@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <img src="{{ url_for("static", filename="images/mikepez_headshot.jpg")}}" width=200px/>
+        <p><a href="https://www.linkedin.com/in/mikepesavento/">Mike Pesavento</a> is a data scientist and neuroscientist, with a knack for being bad at word problems.
+    <p>
+        He wrote <a href="https://github.com/mpesavento/WordleHelper">this helper</a> because he couldn't think
+    of good 5 letter words that matched the letters available.</p>
+    </div>
+    <div>
+    <ul>
+        <li><a href="https://github.com/mpesavento/">Github</a></li>
+        <li><a href="https://www.linkedin.com/in/mikepesavento/">LinkedIn</a></li>
+    </ul>
+    </div>
+
+{% endblock %}

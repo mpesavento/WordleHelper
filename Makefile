@@ -10,5 +10,8 @@ update_deps:
 run:
 	python app.py
 
+run_dev:
+	FLASK_APP=app FLASK_ENV=development flask run
+
 run_cli:
 	python wordle_helper/wordle_filters.py
