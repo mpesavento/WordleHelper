@@ -1,9 +1,9 @@
 import argparse
 import re
-from typing import List, Dict, Union
+from typing import List, Union
 
 from utils import get_input_escapable
-from wordle_helper.word_list import WordList, LetterFrequencies, find_first_guess
+from wordle_helper.word_list import WordList, find_first_guess, sort_by_letter_freq
 
 
 class WordleFilters:
@@ -150,10 +150,7 @@ class WordleFilters:
         :param common_first: sort by common first. If False, sort by rare first
         :return: sorted word strings
         """
-        ltr_freq = LetterFrequencies()
-        word_sum_freq = [(word, ltr_freq.sum_letter_freq(word)) for word in words]
-        words_out = sorted(word_sum_freq, key=lambda x: x[1], reverse=common_first)
-        return [w[0] for w in words_out]
+        return sort_by_letter_freq(words, common_first=common_first)
 
 
 if __name__ == "__main__":

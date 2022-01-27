@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %} - WordleHelper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+</head>
+
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for("static", filename='images/WordleHelper_logo_64.png')}}" width="64" height="64" alt="WH"/>
+            WordleHelper</a>
+        <a href="{{ url_for('first_guess', first_guess=first_guess) }}">First guess</a>
+        <a href="{{ url_for('about') }}">About</a>
+    </nav>
+    <hr>
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert">{{ message }}</div>
+        {% endfor %}
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>
